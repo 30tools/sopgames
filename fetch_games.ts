@@ -26,9 +26,12 @@ async function fetchFromUrl(url: string) {
         while ((match = pattern.exec(htmlContent)) !== null) {
             const [_, gameId, gameUrlSuffix, imageUrl, gameName, rating] = match;
 
+            const slug = gameUrlSuffix.startsWith('/') ? gameUrlSuffix.slice(1) : gameUrlSuffix;
+
             const gameData = {
                 id: gameId,
                 name: gameName,
+                slug: slug,
                 url: `https://www.4j.com${gameUrlSuffix}`,
                 embedUrl: `https://www.4j.com/embed${gameUrlSuffix}`,
                 image: imageUrl,

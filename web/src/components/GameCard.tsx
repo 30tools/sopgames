@@ -8,7 +8,7 @@ export function GameCard({ game }: { game: Game }) {
     const rating = parseFloat(game.rating).toFixed(1);
 
     return (
-        <Link href={`/game/${game.id}`} className="group relative block overflow-hidden rounded-xl bg-card border border-border transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary/10 hover:border-primary/50">
+        <Link href={`/game/${game.slug}`} className="group relative block overflow-hidden rounded-xl bg-card border border-border transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary/10 hover:border-primary/50">
             <div className="aspect-[4/3] w-full relative overflow-hidden">
                 <Image
                     src={game.image}
