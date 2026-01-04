@@ -5,7 +5,7 @@ import { Game } from '../types';
 import { GameGrid } from './GameGrid';
 import { Search, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 
-const GAMES_PER_PAGE = 36;
+const GAMES_PER_PAGE = 50;
 
 interface GameCatalogProps {
     initialGames: Game[];
