@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ChevronLeft, Star } from 'lucide-react';
 import { GameInteractions } from '../../../components/GameInteractions';
 
-const BASE_URL = 'https://web.shraj.workers.dev';
+const BASE_URL = 'https://sopgames.30tools.com';
 
 async function getGames(): Promise<Game[]> {
     try {
