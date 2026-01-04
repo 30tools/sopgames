@@ -31,6 +31,7 @@ async function fetchAndSaveGames() {
                 id: gameId,
                 name: gameName,
                 url: `https://www.4j.com${gameUrlSuffix}`,
+                embedUrl: `https://www.4j.com/embed${gameUrlSuffix}`,
                 image: imageUrl,
                 rating: rating,
             };
