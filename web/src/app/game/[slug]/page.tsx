@@ -34,6 +34,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         description: `Play ${game.name} online for free. No download required. Rated ${parseFloat(game.rating).toFixed(1)}/5.`,
         openGraph: {
             images: [game.image],
+            url: `https://web.shraj.workers.dev/game/${slug}`,
+            type: 'website',
+        },
+        alternates: {
+            canonical: `https://web.shraj.workers.dev/game/${slug}`,
         },
     };
 }
@@ -51,47 +56,79 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
         );
     }
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'VideoGame',
+        name: game.name,
+        description: `Play ${game.name} online for free on SOP Games.`,
+        image: game.image,
+        aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: game.rating,
+            ratingCount: 100, // Placeholder as we only have rating value
+            bestRating: 5,
+            worstRating: 1,
+        },
+        genre: ['Game', 'Arcade', 'Casual'], // Generic genres
+        url: `https://web.shraj.workers.dev/game/${slug}`,
+        applicationCategory: 'Game',
+        operatingSystem: 'Any',
+        offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
+            availability: 'https://schema.org/InStock',
+        },
+    };
+
     return (
-        <main className="min-h-screen bg-background text-foreground flex flex-col">
-            <nav className="p-4 flex items-center justify-between border-b border-white/5 bg-background/50 backdrop-blur-md sticky top-0 z-50">
-                <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-                    <ChevronLeft className="w-5 h-5" />
-                    <span>Back to Browse</span>
-                </Link>
-                <h1 className="font-bold text-lg hidden md:block">{game.name}</h1>
-                <div className="w-20" /> {/* Spacer */}
-            </nav>
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <main className="min-h-screen bg-background text-foreground flex flex-col">
 
-            <div className="flex-1 flex flex-col items-center justify-start p-4 md:p-8 gap-6">
-                <div className="w-full max-w-6xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 relative group">
-                    <iframe
-                        src={game.embedUrl}
-                        className="w-full h-full border-0"
-                        allowFullScreen
-                        loading="lazy"
-                        title={game.name}
-                    />
-                </div>
+                <nav className="p-4 flex items-center justify-between border-b border-white/5 bg-background/50 backdrop-blur-md sticky top-0 z-50">
+                    <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+                        <ChevronLeft className="w-5 h-5" />
+                        <span>Back to Browse</span>
+                    </Link>
+                    <h1 className="font-bold text-lg hidden md:block">{game.name}</h1>
+                    <div className="w-20" /> {/* Spacer */}
+                </nav>
 
-                <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="md:col-span-2 space-y-4">
-                        <div className="flex items-start justify-between">
-                            <div>
-                                <h1 className="text-3xl md:text-4xl font-bold mb-2">{game.name}</h1>
-                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                    <span className="bg-primary/10 text-primary px-2 py-1 rounded-md border border-primary/20">Free to Play</span>
-                                    <div className="flex items-center gap-1 text-yellow-500">
-                                        <Star className="w-4 h-4 fill-current" />
-                                        <span>{parseFloat(game.rating).toFixed(1)}</span>
+                <div className="flex-1 flex flex-col items-center justify-start p-4 md:p-8 gap-6">
+                    <div className="w-full max-w-6xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 relative group">
+                        <iframe
+                            src={game.embedUrl}
+                            className="w-full h-full border-0"
+                            allowFullScreen
+                            loading="lazy"
+                            title={game.name}
+                        />
+                    </div>
+
+                    <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="md:col-span-2 space-y-4">
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <h1 className="text-3xl md:text-4xl font-bold mb-2">{game.name}</h1>
+                                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                        <span className="bg-primary/10 text-primary px-2 py-1 rounded-md border border-primary/20">Free to Play</span>
+                                        <div className="flex items-center gap-1 text-yellow-500">
+                                            <Star className="w-4 h-4 fill-current" />
+                                            <span>{parseFloat(game.rating).toFixed(1)}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <GameInteractions game={game} />
+                        <GameInteractions game={game} />
+                    </div>
                 </div>
-            </div>
-        </main>
+            </main>
+        </>
     );
 }

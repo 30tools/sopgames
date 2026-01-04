@@ -12,13 +12,27 @@ const geistMono = Geist_Mono({
 	subsets: ["latin"],
 });
 
+export const viewport = {
+	themeColor: "#0a0a0a",
+	width: "device-width",
+	initialScale: 1,
+	maximumScale: 1,
+};
+
 export const metadata: Metadata = {
+	metadataBase: new URL('https://web.shraj.workers.dev'),
 	title: "SOP Games | Top Free Online Games",
 	description: "Play thousands of free online games instantly. Cinematic experience, no downloads.",
 	openGraph: {
 		title: "SOP Games | Top Free Online Games",
 		description: "Play thousands of free online games instantly. Cinematic experience, no downloads.",
 		type: "website",
+		siteName: "SOP Games",
+	},
+	appleWebApp: {
+		capable: true,
+		statusBarStyle: "black-translucent",
+		title: "SOP Games",
 	},
 };
 
