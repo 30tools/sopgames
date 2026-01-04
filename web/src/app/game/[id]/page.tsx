@@ -3,10 +3,11 @@ import path from 'path';
 import { Game } from '../../../types';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { ChevronLeft, Maximize2, Share2, Star } from 'lucide-react';
+import { ChevronLeft, Star } from 'lucide-react';
+import { GameInteractions } from '../../../components/GameInteractions';
 
 async function getGames(): Promise<Game[]> {
-    const filePath = path.join(process.cwd(), 'data', 'games.json');
+    const filePath = path.join(process.cwd(), 'public', 'games.json');
     const fileContents = await fs.readFile(filePath, 'utf8');
     return JSON.parse(fileContents);
 }
@@ -88,16 +89,7 @@ export default async function GamePage({ params }: { params: Promise<{ id: strin
                         </div>
                     </div>
 
-                    <div className="space-y-4">
-                        <button className="w-full py-3 px-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-                            <Maximize2 className="w-5 h-5" />
-                            Enter Fullscreen
-                        </button>
-                        <button className="w-full py-3 px-4 bg-secondary text-secondary-foreground rounded-lg font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 border border-border">
-                            <Share2 className="w-5 h-5" />
-                            Share Game
-                        </button>
-                    </div>
+                    <GameInteractions game={game} />
                 </div>
             </div>
         </main>
