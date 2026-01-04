@@ -3,6 +3,7 @@ import { GameCatalog } from '../components/GameCatalog';
 import { Game } from '../types';
 import { Sparkles, Gamepad2, Trophy, Zap } from 'lucide-react';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 // Helper to get random game for hero background (simulated for static build)
 import { promises as fs } from 'fs';
@@ -93,7 +94,9 @@ export default async function Home() {
 
       {/* Game Catalog Section */}
       <div id="catalog" className="container mx-auto px-4 py-12 relative z-10">
-        <GameCatalog initialGames={games} />
+        <Suspense fallback={<div className="text-white text-center py-20">Loading games...</div>}>
+          <GameCatalog initialGames={games} />
+        </Suspense>
       </div>
     </main>
   );

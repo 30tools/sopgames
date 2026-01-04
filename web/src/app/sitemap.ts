@@ -1,14 +1,18 @@
 import { MetadataRoute } from 'next';
-import { promises as fs } from 'fs';
-import path from 'path';
 import { Game } from '../types';
 
 const BASE_URL = 'https://sopgames.30tools.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const filePath = path.join(process.cwd(), 'public', 'games.json');
-    const fileContents = await fs.readFile(filePath, 'utf8');
-    const games: Game[] = JSON.parse(fileContents);
+    let games: Game[] = [];
+    try {
+        const response = await fetch(`${BASE_URL}/games.json`, { next: { revalidate: 3600 } });
+        if (response.ok) {
+            games = await response.json();
+        }
+    } catch (error) {
+        console.error('Failed to fetch games for sitemap:', error);
+    }
 
     const gameUrls = games.map((game) => ({
         url: `${BASE_URL}/game/${game.slug}`,
