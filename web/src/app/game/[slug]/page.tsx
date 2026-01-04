@@ -67,27 +67,56 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
 
     const jsonLd = {
         '@context': 'https://schema.org',
-        '@type': 'VideoGame',
-        name: game.name,
-        description: `Play ${game.name} online for free on SOP Games.`,
-        image: game.image,
-        aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: game.rating,
-            ratingCount: 100, // Placeholder
-            bestRating: 5,
-            worstRating: 1,
-        },
-        genre: ['Game', 'Arcade', 'Casual'],
-        url: `${BASE_URL}/game/${slug}`,
-        applicationCategory: 'Game',
-        operatingSystem: 'Any',
-        offers: {
-            '@type': 'Offer',
-            price: '0',
-            priceCurrency: 'USD',
-            availability: 'https://schema.org/InStock',
-        },
+        '@graph': [
+            {
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                    {
+                        '@type': 'ListItem',
+                        position: 1,
+                        name: 'Home',
+                        item: BASE_URL,
+                    },
+                    {
+                        '@type': 'ListItem',
+                        position: 2,
+                        name: 'Games',
+                        item: `${BASE_URL}/#catalog`,
+                    },
+                    {
+                        '@type': 'ListItem',
+                        position: 3,
+                        name: game.name,
+                        item: `${BASE_URL}/game/${slug}`,
+                    },
+                ],
+            },
+            {
+                '@type': 'VideoGame',
+                name: game.name,
+                description: `Play ${game.name} online for free on SOP Games. No download required.`,
+                image: game.image,
+                url: `${BASE_URL}/game/${slug}`,
+                datePublished: '2023-01-01', // Fallback as we don't have date
+                genre: ['Game', 'Arcade', 'Casual'],
+                playMode: 'SinglePlayer',
+                applicationCategory: 'Game',
+                operatingSystem: 'Any',
+                aggregateRating: {
+                    '@type': 'AggregateRating',
+                    ratingValue: game.rating,
+                    ratingCount: 100,
+                    bestRating: 5,
+                    worstRating: 1,
+                },
+                offers: {
+                    '@type': 'Offer',
+                    price: '0',
+                    priceCurrency: 'USD',
+                    availability: 'https://schema.org/InStock',
+                },
+            },
+        ],
     };
 
     return (
@@ -98,10 +127,10 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
             />
             <main className="min-h-screen bg-background text-foreground flex flex-col relative overflow-hidden">
                 {/* Cinematic Background */}
-                <div className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-background/60 z-10" />
+                <div className="absolute inset-0 z-0 pointer-events-none">
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/95 to-background/40 z-10" />
                     <div
-                        className="w-full h-full opacity-30 blur-3xl scale-110"
+                        className="w-full h-full opacity-40 blur-[100px] scale-125 saturate-150"
                         style={{
                             backgroundImage: `url(${game.image})`,
                             backgroundSize: 'cover',
@@ -110,56 +139,61 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
                     />
                 </div>
 
-                <nav className="p-4 flex items-center justify-between border-b border-white/5 bg-background/40 backdrop-blur-md sticky top-0 z-50">
-                    <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-white transition-colors group">
-                        <div className="p-1 rounded-full bg-white/5 group-hover:bg-white/10 transition-colors">
-                            <ChevronLeft className="w-5 h-5" />
-                        </div>
-                        <span className="font-medium">Browse</span>
-                    </Link>
-                    <h1 className="font-bold text-lg hidden md:block text-white/90">{game.name}</h1>
-                    <div className="w-20" />
+                <nav className="relative z-50 p-4 border-b border-white/5 bg-background/20 backdrop-blur-xl sticky top-0">
+                    <div className="max-w-7xl mx-auto flex items-center justify-between">
+                        <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-white transition-colors group">
+                            <div className="p-2 rounded-full bg-white/5 group-hover:bg-white/10 transition-all border border-white/5 group-hover:border-white/20">
+                                <ChevronLeft className="w-5 h-5" />
+                            </div>
+                            <span className="font-medium hidden sm:inline">Back to Browse</span>
+                        </Link>
+                        <h1 className="font-bold text-lg text-white/90 truncate max-w-[200px] md:max-w-md">{game.name}</h1>
+                        <div className="w-10 md:w-24" />
+                    </div>
                 </nav>
 
-                <div className="flex-1 flex flex-col items-center justify-start p-4 md:p-8 gap-8 relative z-20">
+                <div className="flex-1 flex flex-col items-center justify-start p-4 md:p-8 gap-8 relative z-20 container mx-auto max-w-7xl">
                     {/* Game Container */}
-                    <div className="w-full max-w-6xl aspect-video bg-black/80 rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 relative group">
+                    <div className="w-full aspect-video bg-black/90 rounded-2xl overflow-hidden shadow-2xl shadow-primary/5 ring-1 ring-white/10 relative group">
                         <iframe
                             src={game.embedUrl}
                             className="w-full h-full border-0"
                             allowFullScreen
-                            loading="lazy"
+                            loading="eager" // Load game immediately
                             title={game.name}
                         />
                     </div>
 
                     {/* Metadata & Actions */}
-                    <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="md:col-span-2 space-y-6">
+                    <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div className="lg:col-span-2 space-y-6">
                             <div>
-                                <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight drop-shadow-lg">{game.name}</h1>
+                                <h1 className="text-4xl md:text-6xl font-black mb-4 tracking-tight drop-shadow-2xl text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">{game.name}</h1>
 
                                 <div className="flex flex-wrap items-center gap-4 text-sm">
-                                    <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full font-semibold shadow-lg shadow-primary/20">
+                                    <span className="bg-gradient-to-r from-primary/80 to-purple-500/80 text-white px-4 py-1.5 rounded-full font-bold shadow-lg shadow-primary/20 backdrop-blur-md border border-white/10">
                                         Free to Play
                                     </span>
-                                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
+                                    <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 backdrop-blur-md">
                                         <Star className="w-4 h-4 fill-current" />
                                         <span className="font-bold">{parseFloat(game.rating).toFixed(1)}</span>
-                                        <span className="text-yellow-500/60 font-normal">/ 5.0</span>
                                     </div>
+                                    <span className="text-muted-foreground">HTML5 • Mobile Friendly</span>
                                 </div>
                             </div>
 
-                            <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                                Play <strong>{game.name}</strong> instantly in your browser. No downloads, no installation using SOP Games.
+                            <p className="text-lg text-gray-300 leading-relaxed max-w-3xl">
+                                Play <strong>{game.name}</strong> instantly in your browser.
+                                No downloads, no installation using <span className="text-white font-semibold">SOP Games</span>.
                                 Experience seamless gameplay optimized for all devices.
                             </p>
                         </div>
 
-                        <div className="p-6 rounded-2xl bg-card/30 backdrop-blur-sm border border-white/5 h-fit">
-                            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">Interactions</h3>
-                            <GameInteractions game={game} />
+                        <div className="lg:col-span-1">
+                            <div className="p-6 rounded-3xl bg-card/20 backdrop-blur-xl border border-white/10 shadow-xl">
+                                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-6">Game Controls</h3>
+                                <GameInteractions game={game} />
+                            </div>
                         </div>
                     </div>
                 </div>

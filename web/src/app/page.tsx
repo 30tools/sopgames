@@ -1,25 +1,92 @@
 import { GameCatalog } from '../components/GameCatalog';
+// Cinematic components
+import { Game } from '../types';
+import { Sparkles, Gamepad2, Trophy, Zap } from 'lucide-react';
+import Link from 'next/link';
 
-export default function Home() {
-	return (
-		<main className="min-h-screen pb-20">
-			<div className="relative h-[40vh] w-full flex items-center justify-center bg-gradient-to-b from-purple-900/20 to-background overflow-hidden">
-				<div className="absolute inset-0 bg-[url('https://www.4j.com/cdn-cgi/image/quality=78,fit=cover,format=auto/thumb/201705/Magic-Piano-Online.jpg')] bg-cover bg-center opacity-10 blur-xl scale-110" />
-				<div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background" />
+// Helper to get random game for hero background (simulated for static build)
+import { promises as fs } from 'fs';
+import path from 'path';
 
-				<div className="relative z-10 text-center space-y-4 px-4">
-					<h1 className="text-5xl md:text-7xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-white/50">
-						SOP GAMES
-					</h1>
-					<p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-						Discover thousands of free online games. Play instantly, no download required.
-					</p>
-				</div>
-			</div>
+async function getGames() {
+   const filePath = path.join(process.cwd(), 'public', 'games.json');
+   const fileContents = await fs.readFile(filePath, 'utf8');
+   return JSON.parse(fileContents) as Game[];
+}
 
-			<div className="container mx-auto px-4 -mt-20 relative z-20 pb-12">
-				<GameCatalog />
-			</div>
-		</main>
-	);
+export default async function Home() {
+  const games = await getGames();
+  const heroGame = games[0]; // Or random, but deterministic for build
+
+  return (
+    <main className="min-h-screen bg-background text-foreground flex flex-col">
+      {/* Immersive Hero Section */}
+      <section className="relative w-full h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden">
+        {/* Dynamic Background */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent z-10" />
+          <div className="absolute inset-0 bg-black/60 z-10" />
+          <div 
+            className="w-full h-full transform scale-105 animate-slow-zoom"
+            style={{
+               backgroundImage: `url(${ heroGame.image })`,
+               backgroundSize: 'cover',
+               backgroundPosition: 'center',
+            }}
+          />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-20 text-center max-w-4xl px-4 space-y-6">
+          <div className="flex items-center justify-center gap-2 mb-4 animate-fade-in-up">
+            <span className="px-3 py-1 rounded-full bg-primary/20 text-primary border border-primary/20 text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
+              Welcome to the Future of Gaming
+            </span>
+          </div>
+          
+          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white drop-shadow-2xl animate-fade-in-up delay-100">
+            Play Without <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">Limits</span>
+          </h1>
+          
+          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed animate-fade-in-up delay-200">
+            Dive into thousands of premium titles instantly. No downloads, no lag, just pure gameplay.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-fade-in-up delay-300">
+             <Link href="#catalog" className="px-8 py-4 rounded-full bg-primary text-primary-foreground font-bold text-lg hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/25 hover:scale-105 active:scale-95 flex items-center gap-2">
+                <Gamepad2 className="w-5 h-5" />
+                Start Playing
+             </Link>
+             <Link href="/game/Shop-Mine-Deep" className="px-8 py-4 rounded-full bg-white/10 text-white font-semibold text-lg hover:bg-white/20 transition-all backdrop-blur-md border border-white/10 flex items-center gap-2">
+                <Sparkles className="w-5 h-5" />
+                Featured Game
+             </Link>
+          </div>
+        </div>
+
+        {/* Stats / Features - Floating */}
+        <div className="absolute bottom-10 left-0 right-0 z-20 hidden md:flex justify-center gap-12 text-white/50 animate-fade-in">
+           <div className="flex items-center gap-3">
+              <Trophy className="w-6 h-6 text-yellow-500" />
+              <div className="flex flex-col text-left">
+                 <span className="text-white font-bold text-lg">14,000+</span>
+                 <span className="text-xs uppercase tracking-wider">Games Available</span>
+              </div>
+           </div>
+           <div className="flex items-center gap-3">
+              <Zap className="w-6 h-6 text-blue-500" />
+              <div className="flex flex-col text-left">
+                 <span className="text-white font-bold text-lg">Instant</span>
+                 <span className="text-xs uppercase tracking-wider">No Downloads</span>
+              </div>
+           </div>
+        </div>
+      </section>
+
+      {/* Game Catalog Section */}
+      <div id="catalog" className="container mx-auto px-4 py-12 relative z-10">
+        <GameCatalog initialGames={games} />
+      </div>
+    </main>
+  );
 }
