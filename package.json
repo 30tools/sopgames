@@ -1,0 +1,24 @@
+{
+    "name": "sopgames",
+    "version": "1.0.0",
+    "description": "Scraper for 4j.com games",
+    "main": "index.ts",
+    "scripts": {
+        "fetch": "bun run fetch_games.ts",
+        "merge": "bun run merge_games.ts"
+    },
+    "keywords": [
+        "scraper",
+        "games",
+        "4j"
+    ],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/bun": "latest",
+        "@types/node": "^20.10.0"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    }
+}
