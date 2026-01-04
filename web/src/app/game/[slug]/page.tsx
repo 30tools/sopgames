@@ -34,11 +34,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         description: `Play ${game.name} online for free. No download required. Rated ${parseFloat(game.rating).toFixed(1)}/5.`,
         openGraph: {
             images: [game.image],
-            url: `https://web.shraj.workers.dev/game/${slug}`,
+            url: `https://sopgames.30tools.com/game/${slug}`,
             type: 'website',
         },
         alternates: {
-            canonical: `https://web.shraj.workers.dev/game/${slug}`,
+            canonical: `https://sopgames.30tools.com/game/${slug}`,
         },
     };
 }
@@ -70,7 +70,7 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
             worstRating: 1,
         },
         genre: ['Game', 'Arcade', 'Casual'], // Generic genres
-        url: `https://web.shraj.workers.dev/game/${slug}`,
+        url: `https://sopgames.30tools.com/game/${slug}`,
         applicationCategory: 'Game',
         operatingSystem: 'Any',
         offers: {

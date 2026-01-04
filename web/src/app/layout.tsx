@@ -20,7 +20,7 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-	metadataBase: new URL('https://web.shraj.workers.dev'),
+	metadataBase: new URL('https://sopgames.30tools.com'),
 	title: "SOP Games | Top Free Online Games",
 	description: "Play thousands of free online games instantly. Cinematic experience, no downloads.",
 	openGraph: {
